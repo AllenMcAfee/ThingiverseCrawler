@@ -29,7 +29,7 @@ def parse_thing_ids(text):
     return [int(val) for val in matched];
 
 def parse_image_ids(text):
-    pattern = "renders/";
+    pattern = "renders/(.*)";
     matched = re.findall(pattern, text);
     return [int(val) for val in matched];
 
@@ -181,7 +181,7 @@ def get_download_link(file_id):
 
 def get_image_link(image_id):
     base_url = "http://www.thingiverse.com/{}:{}";
-    url = base_url.format("renders", image_id);
+    url = base_url.format("renders/", image_id);
     r = requests.head(url);
     link = r.headers.get("Location", None);
     if link is not None:

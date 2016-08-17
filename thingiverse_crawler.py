@@ -174,6 +174,17 @@ def get_download_link(file_id):
             return None;
         return link;
 
+def get_image_link(image_id):
+    base_url = "http://www.thingiverse-production-new.s3.amazonaws.com/{}:{}";
+    url = base_url.format("renders", image_id);
+    r = requests.head(url);
+    link = r.headers.get("Location", None);
+    if link is not None:
+        __, ext = os.path.splitext(link);
+        if ext.lower() not in [".jpg"]:
+            return None;
+        return link;
+
 def download_file(file_id, output_dir):
     link = get_download_link(file_id);
     if link is None:
@@ -187,14 +198,14 @@ def download_file(file_id, output_dir):
 
 def save_records(records):
     with open("summary.csv", 'w') as fout:
-        fout.write("thing_id, file_id, file, license, link\n");
+        fout.write("image_id, thing_id, file_id, file, license, link\n");
         for entry in records:
             fout.write(",".join([str(val) for val in entry]) + "\n");
 
 def parse_args():
     parser = argparse.ArgumentParser(
             description="Crawl data from thingiverse",
-            epilog="Written by Qingnan Zhou <qnzhou at gmail dot com>");
+            epilog="Written by Allen McAfee");
     parser.add_argument("--output-dir", "-o", help="output directories",
             default=".");
     parser.add_argument("N", type=int,

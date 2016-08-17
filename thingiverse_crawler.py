@@ -180,9 +180,6 @@ def get_image_link(image_id):
     r = requests.head(url);
     link = r.headers.get("Location", None);
     if link is not None:
-        __, ext = os.path.splitext(link);
-        if ext.lower() not in [".jpg"]:
-            return None;
         return link;
 
 def download_file(file_id, output_dir):

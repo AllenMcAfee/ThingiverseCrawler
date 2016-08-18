@@ -188,6 +188,8 @@ def get_image_link(image_id):
     #if link is not None:
     #    return link;
     contents = get_url(url);
+    image_id = parse_img_ids(contents);
+    return image_id, parse_image_ids(contents);
 
 def download_file(file_id, output_dir):
     link = get_download_link(file_id);

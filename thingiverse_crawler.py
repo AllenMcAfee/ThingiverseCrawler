@@ -180,7 +180,7 @@ def get_download_link(file_id):
         return link;
 
 def get_image_link(image_id):
-    base_url = "http://www.thingiverse.com/{}:{}";
+    base_url = "http://thingiverse-production-new.s3.amazonaws.com/{}:{}";
     url = base_url.format("renders/", image_id);
     r = requests.head(url);
     link = r.headers.get("Location", None);

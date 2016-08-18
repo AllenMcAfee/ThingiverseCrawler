@@ -31,7 +31,7 @@ def parse_thing_ids(text):
 def parse_image_id(text):
     pattern = "renders/(.*)";
     matched = re.findall(pattern, text);
-    return match
+    return matched
 
 def parse_file_ids(text):
     pattern = "download:(\d{5,7})";

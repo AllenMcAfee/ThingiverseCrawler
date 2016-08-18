@@ -183,10 +183,11 @@ def get_download_link(file_id):
 def get_image_link(image_id):
     base_url = "http://thingiverse-production-new.s3.amazonaws.com/{}:{}";
     url = base_url.format("renders/", image_id);
-    r = requests.head(url);
-    link = r.headers.get("Location", None);
-    if link is not None:
-        return link;
+    #r = requests.head(url);
+    #link = r.headers.get("Location", None);
+    #if link is not None:
+    #    return link;
+    contents = get_url(url);
 
 def download_file(file_id, output_dir):
     link = get_download_link(file_id);

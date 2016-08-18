@@ -26,10 +26,11 @@ def datetime_to_timestamp(dt):
 def parse_thing_ids(text):
     pattern = "thing:(\d{5,7})";
     matched = re.findall(pattern, text);
-    return [int(val) for val in matched];
+    #return [int(val) for val in matched];
+    return matched[0]
 
-def parse_image_id(text):
-    pattern = "renders/(.*)";
+def parse_image_ids(text):
+    pattern = "renders/(.*).jpg";
     matched = re.findall(pattern, text);
     return matched
 
@@ -107,9 +108,6 @@ def crawl_new_things(N, output_dir):
     #baseurl = "http://www.thingiverse.com/newest/page:{}";
     #baseurl = "http://www.thingiverse.com/explore/popular/page:{}";
     baseurl = "http://www.thingiverse.com/explore/featured/page:{}";
-    image_ids = set();
-    thing_ids = set();
-    file_ids = set();
     records = [];
     num_files = 0;
     page = 0;
@@ -118,34 +116,18 @@ def crawl_new_things(N, output_dir):
         url = baseurl.format(page+1);
         contents = get_url(url);
         page += 1;
-
-        for thing_id in parse_thing_ids(contents):
-            if thing_id in thing_ids: #continues to next thing_id if duplicate
-                continue;
-            print("thing id: {}".format(thing_id))
-            thing_ids.add(thing_id);
-            license, thing_files = get_thing(thing_id);
-            for file_id in thing_files:
-                if file_id in file_ids:
-                    continue;
-                file_ids.add(file_id);
-                print("  file id: {}".format(file_id));
-                result = download_file(file_id, output_dir);
-                if result is None: continue;
-                filename, link = result;
-                
-                image_id = parse_image_id(contents)
-                image_url = get_image_link(image_id)
-                
-                if filename is not None:
-                    records.append((image_url, thing_id, file_id, filename, license, link));
-                    if len(records) >= N:
-                        return records;
-
-            # Sleep a bit to avoid being mistaken as DoS.
-            time.sleep(0.5);
-            save_records(records);
-
+        for image_id in parse_image_ids(contents):
+            thing_id = parse_thing_ids(contents)
+            license, file_ids = get_thing(thing_id)
+            links = [get_download_link(file_id) for file_id in file_ids]
+            image_url = get_image_link(image_id)
+            
+            records.append((image_url, thing_id, file_id, license, links))
+            if len(records) >= N:
+                return records
+            time.sleep(0.5)
+            save_records(records)
+        
 def get_thing(thing_id):
     base_url = "http://www.thingiverse.com/{}:{}";
     file_ids = [];
@@ -185,15 +167,12 @@ def get_download_link(file_id):
         return link;
 
 def get_image_link(image_id):
-    base_url = "http://thingiverse-production-new.s3.amazonaws.com/{}:{}";
+    base_url = "http://thingiverse-production-new.s3.amazonaws.com/{}:{}.jpg";
     url = base_url.format("renders/", image_id);
-    #r = requests.head(url);
-    #link = r.headers.get("Location", None);
-    #if link is not None:
-    #    return link;
-    contents = get_url(url);
-    image_id = parse_image_id(contents);
-    return image_id, parse_image_id(contents);
+    r = requests.head(url);
+    link = r.headers.get("Location", None);
+    if link is not None:
+        return link;
 
 def download_file(file_id, output_dir):
     link = get_download_link(file_id);

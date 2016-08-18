@@ -193,6 +193,7 @@ def save_records(records):
     with open("summary.csv", 'w') as fout:
         fout.write("image_url, thing_id, file_id, license, links\n");
         for entry in records: #entry= (image_url, thing_id, file_id, license, links)
+            print entry
             links = str(entry[4]).replace(',' , ';')
             vals = [entry[0], entry[1], entry[2], entry[3], links]
             row = '{0},{1},{2},{3},{4}\n'.format(*vals)

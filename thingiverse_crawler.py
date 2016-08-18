@@ -28,7 +28,7 @@ def parse_thing_ids(text):
     matched = re.findall(pattern, text);
     return [int(val) for val in matched];
 
-def parse_image_ids(text):
+def parse_image_id(text):
     pattern = "renders/(.*)";
     matched = re.findall(pattern, text);
     #return [int(val) for val in matched];
@@ -107,7 +107,7 @@ def crawl_new_things(N, output_dir):
     #baseurl = "http://www.thingiverse.com/newest/page:{}";
     #baseurl = "http://www.thingiverse.com/explore/popular/page:{}";
     baseurl = "http://www.thingiverse.com/explore/featured/page:{}";
-    image_ids = set();
+    image_id = set();
     thing_ids = set();
     file_ids = set();
     records = [];
@@ -188,8 +188,8 @@ def get_image_link(image_id):
     #if link is not None:
     #    return link;
     contents = get_url(url);
-    image_id = parse_img_ids(contents);
-    return image_id, parse_image_ids(contents);
+    image_id = parse_image_id(contents);
+    return image_id, parse_image_id(contents);
 
 def download_file(file_id, output_dir):
     link = get_download_link(file_id);

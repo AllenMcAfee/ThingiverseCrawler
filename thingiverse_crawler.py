@@ -189,10 +189,12 @@ def download_file(file_id, output_dir):
     return output_file, link;
 
 def save_records(records):
+    #(image_url, thing_id, file_id, license, links)
     with open("summary.csv", 'w') as fout:
-        fout.write("image_id, thing_id, file_id, file, license, link\n");
-        for entry in records:
-            fout.write(",".join([str(val) for val in entry]) + "\n");
+        fout.write("image_img, thing_id, file_id, file, license, link\n");
+        for entry in records: #entry= (image_url, thing_id, file_id, license, links)
+            row = '{0},{1},{2},{3},{4},{5}\n'.format(*entry)
+            fout.write(row)
 
 def parse_args():
     parser = argparse.ArgumentParser(

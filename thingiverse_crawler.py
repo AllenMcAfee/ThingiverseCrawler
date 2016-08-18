@@ -107,6 +107,7 @@ def crawl_new_things(N, output_dir):
     #baseurl = "http://www.thingiverse.com/newest/page:{}";
     #baseurl = "http://www.thingiverse.com/explore/popular/page:{}";
     baseurl = "http://www.thingiverse.com/explore/featured/page:{}";
+    image_ids = set();
     thing_ids = set();
     file_ids = set();
     records = [];

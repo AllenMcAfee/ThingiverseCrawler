@@ -107,7 +107,7 @@ def crawl_new_things(N, output_dir):
     #baseurl = "http://www.thingiverse.com/newest/page:{}";
     #baseurl = "http://www.thingiverse.com/explore/popular/page:{}";
     baseurl = "http://www.thingiverse.com/explore/featured/page:{}";
-    image_id = set();
+    image_ids = set();
     thing_ids = set();
     file_ids = set();
     records = [];
@@ -120,7 +120,7 @@ def crawl_new_things(N, output_dir):
         page += 1;
 
         for thing_id in parse_thing_ids(contents):
-            if thing_id in thing_ids:
+            if thing_id in thing_ids: #continues to next thing_id if duplicate
                 continue;
             print("thing id: {}".format(thing_id))
             thing_ids.add(thing_id);
@@ -133,8 +133,12 @@ def crawl_new_things(N, output_dir):
                 result = download_file(file_id, output_dir);
                 if result is None: continue;
                 filename, link = result;
+                
+                image_id = parse_image_id(contents)
+                image_url = get_image_link(image_id)
+                
                 if filename is not None:
-                    records.append((image_id, thing_id, file_id, filename, license, link));
+                    records.append((image_url, thing_id, file_id, filename, license, link));
                     if len(records) >= N:
                         return records;
 

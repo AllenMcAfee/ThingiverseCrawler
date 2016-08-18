@@ -118,6 +118,7 @@ def crawl_new_things(N, output_dir):
         page += 1;
         for image_id in parse_image_ids(contents):
             thing_id = parse_thing_ids(contents)
+            print "Starting image {} for thing {}".format(image_id, thing_id)
             license, file_ids = get_thing(thing_id)
             links = [get_download_link(file_id) for file_id in file_ids]
             image_url = get_image_link(image_id)
@@ -125,9 +126,11 @@ def crawl_new_things(N, output_dir):
             records.append((image_url, thing_id, file_id, license, links))
             if len(records) >= N:
                 return records
-            time.sleep(0.5)
+            print "Saving image..."
             save_records(records)
-        
+            print "Saved!"
+            time.sleep(0.5)
+            
 def get_thing(thing_id):
     base_url = "http://www.thingiverse.com/{}:{}";
     file_ids = [];

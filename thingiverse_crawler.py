@@ -134,7 +134,7 @@ def crawl_new_things(N, output_dir):
                 if result is None: continue;
                 filename, link = result;
                 if filename is not None:
-                    records.append((thing_id, file_id, filename, license, link));
+                    records.append((image_id, thing_id, file_id, filename, license, link));
                     if len(records) >= N:
                         return records;
 

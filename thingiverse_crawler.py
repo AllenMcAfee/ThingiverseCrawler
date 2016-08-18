@@ -193,7 +193,7 @@ def save_records(records):
     with open("summary.csv", 'w') as fout:
         fout.write("image_img, thing_id, file_id, file, license, link\n");
         for entry in records: #entry= (image_url, thing_id, file_id, license, links)
-            row = '{0},{1},{2},{3},{4},{5}\n'.format(*entry)
+            row = '{0},{1},{2},{3},{4}\n'.format(*entry)
             fout.write(row)
 
 def parse_args():
